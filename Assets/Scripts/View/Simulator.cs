@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using Controllers;
 using TMPro;
 using Mathematics;
@@ -13,6 +14,7 @@ namespace View
         [SerializeField] private Animator _animator;
 
         [SerializeField] private GameObject point;
+        [SerializeField] private ShowMensaje messages;
 
         [SerializeField] private TMP_InputField inicialVelocity, angle, estimate;
 
@@ -50,24 +52,21 @@ namespace View
             return transform.position.y;
         }
 
-        public float GetAngle()
+        public string GetAngle()
         {
-            return float.Parse(ConvertTextNormalInFloat(angle.text));
+            return angle.text;
         }
 
-        private string ConvertTextNormalInFloat(string text)
+        
+
+        public string GetPower()
         {
-            return text.Replace(".", ",");
+            return inicialVelocity.text;
         }
 
-        public float GetPower()
+        public string GetEstimate()
         {
-            return float.Parse(ConvertTextNormalInFloat(inicialVelocity.text));
-        }
-
-        public float GetEstimate()
-        {
-            return float.Parse(ConvertTextNormalInFloat(estimate.text));
+            return estimate.text;
         }
 
         public void CreatePoint(Vector2 position)
@@ -90,6 +89,27 @@ namespace View
         public void ResetList()
         {
             DestroidAll();
+        }
+
+        public void ShowMessage(string message)
+        {
+            messages.ShowMesage(message);            
+        }
+
+        public void CreatePoints(List<Vector2> resultList)
+        {
+            StartCoroutine(CreatePointsInView(resultList));
+        }
+
+        IEnumerator CreatePointsInView(List<Vector2> resultList)
+        {
+            foreach (var position in resultList)
+            {
+                CreatePoint(position);
+                yield return new WaitForSeconds(.3f);
+            }
+
+            _logic.CalculateMatgin();
         }
 
         private void DestroidAll()

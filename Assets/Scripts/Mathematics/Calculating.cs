@@ -22,7 +22,7 @@ namespace Mathematics
             
             if (_power < 0)
             {
-                throw new CalculatinException("La potencia debe ser positiva");
+                throw new CalculatinException("La Velocidad inicial debe ser positiva");
             }
 
             if (_angle < 0 || _angle > 90)

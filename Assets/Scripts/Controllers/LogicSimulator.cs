@@ -1,4 +1,5 @@
-﻿using Mathematics;
+﻿using System;
+using Mathematics;
 using UnityEngine;
 
 namespace Controllers
@@ -17,21 +18,36 @@ namespace Controllers
             _simulatorView = simulatorView;
             
         }
-        
+        private string ConvertTextNormalInFloat(string text)
+        {
+            var sstring = text.Replace(".", ",");
+            return sstring==""?"0":sstring;
+        }
         public void CalculateTrajectory()
         {
-            _simulatorView.ResetList();
-            _angle = _simulatorView.GetAngle();
-            _inicialVelocity = _simulatorView.GetPower();
-            _estimate = _simulatorView.GetEstimate();
-            _calculating = new Calculating(_inicialVelocity, _angle, _simulatorView);
-            var resultList = _calculating.Prediction();
-            _lastPositionInX = Mathf.Abs(resultList[resultList.Count-1].x - _simulatorView.PositionInX());
-            foreach (var position in resultList)
+            try
             {
-                _simulatorView.CreatePoint(position);
+                _simulatorView.ResetList();
+                _angle = float.Parse(ConvertTextNormalInFloat(_simulatorView.GetAngle()));
+                _inicialVelocity = float.Parse(ConvertTextNormalInFloat( _simulatorView.GetPower()));
+                _estimate =  float.Parse(ConvertTextNormalInFloat(_simulatorView.GetEstimate()));
+                _calculating = new Calculating(_inicialVelocity, _angle, _simulatorView);
+                var resultList = _calculating.Prediction();
+                _lastPositionInX = Mathf.Abs(resultList[resultList.Count - 1].x - _simulatorView.PositionInX());
+                _simulatorView.CreatePoints(resultList);
             }
-            
+            catch (CalculatinException e)
+            {
+                _simulatorView.ShowMessage(e.Message);
+            }
+            catch (FormatException e)
+            {
+                _simulatorView.ShowMessage("Hay un valor que no es numerico");
+            }
+        }
+
+        public void CalculateMatgin()
+        {
             if (MarginError(_lastPositionInX, _estimate) < 5)
             {
                 _simulatorView.PlayerWin();

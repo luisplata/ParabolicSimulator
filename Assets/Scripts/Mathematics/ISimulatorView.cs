@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Mathematics
 {
@@ -6,12 +7,14 @@ namespace Mathematics
     {
         float PositionInX();
         float PositionInY();
-        float GetAngle();
-        float GetPower();
-        float GetEstimate();
+        string GetAngle();
+        string GetPower();
+        string GetEstimate();
         void CreatePoint(Vector2 position);
         void PlayerWin();
         void PlayerFail();
         void ResetList();
+        void ShowMessage(string message);
+        void CreatePoints(List<Vector2> resultList);
     }
 }
