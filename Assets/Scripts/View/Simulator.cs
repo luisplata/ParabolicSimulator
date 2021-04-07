@@ -114,6 +114,7 @@ namespace View
 
         private void DestroidAll()
         {
+            StopAllCoroutines();
             foreach (var pointInWord in _listOfPoints)
             {
                 Destroy(pointInWord);
